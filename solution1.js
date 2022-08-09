@@ -41,20 +41,38 @@ class RangeList {
     beginning and end of range.
     */
     remove(range) {
-        // TODO: implement this
-        const rangeList = this.rangeList
-        let newRangeList = []
-        const [min, max] = range
-        for (const curRange of rangeList) {
-            const curMin = curRange[0]
-            const curMax = curRange[1]
-            if (min > curMax || max < curMin) newRangeList.push(curRange)
-            else {
-                if (min > curMin) newRangeList.push([curMin, min])
-                if (max < curMax) newRangeList.push([max, curMax])
-            }
+        const [left, right] = range
+        let i = 0;
+        // 当前范围max < 最小值, 跳过
+        while (i < this.rangeList.length && this.rangeList[i][1] < left) {
+            i++;
         }
-        this.rangeList = newRangeList
+        // 当前范围最小值 < 最小值
+        if (i < this.rangeList.length && this.rangeList[i][0] < left) {
+            // 得到新的范围 [当前最小, 最小]
+            let newIntervalBefore = [this.rangeList[i][0], left];
+            // the interval to delete is between one of the intervals
+            // 若当前最大 > 最大值
+            if (right < this.rangeList[i][1]) {
+                let newIntervalAfter = [right, this.rangeList[i][1]];
+                this.rangeList.splice(i, 1, newIntervalBefore, newIntervalAfter);
+                return;
+            }
+            this.rangeList.splice(i, 1, newIntervalBefore);
+            i++;
+        }
+
+        // 当前范围最大值 < 最大值, 先吧当前范围删除
+        while (i < this.rangeList.length && right >= this.rangeList[i][1]) {
+            this.rangeList.splice(i, 1);
+        }
+
+        // 当前范围最小值 < 最大值,
+        if (i < this.rangeList.length && right > this.rangeList[i][0]) {
+            // 得到新的范围 [最大值, 当前范围最大值]
+            let newIntervalAfter = [right, this.rangeList[i][1]];
+            this.rangeList.splice(i, 1, newIntervalAfter);
+        }
     }
 
     /**
