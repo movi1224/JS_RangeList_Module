@@ -1,4 +1,4 @@
 # JS_RangeList_Module
-##Coding challenge from Jerry.ai
+## Coding challenge from Jerry.ai
 
-###Two different Solutions
+### Two different Solutions
